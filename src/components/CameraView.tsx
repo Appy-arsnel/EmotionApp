@@ -18,7 +18,7 @@ import {
   Face,
   Camera,
   FaceDetectionOptions
-} from 'react-native-vision-camera-face-detector'
+} from 'react-native-vision-camera-face-detector';
 
 const PermissionsPage = () => {
   const { requestPermission } = useCameraPermission();
@@ -29,7 +29,7 @@ const PermissionsPage = () => {
 
   return (
     <SafeAreaView>
-      <Text>Permissions is required.</Text>
+      <Text>Permissions are required.</Text>
     </SafeAreaView>
   );
 };
@@ -45,10 +45,9 @@ const NoCameraDeviceError = () => {
 function CameraView() {
   const device = useCameraDevice("front");
   const { hasPermission } = useCameraPermission();
-  const cameraRef: any = React.useRef(null);
+  const cameraRef: any = useRef(null);
   const [photo, setPhoto] = React.useState<string | null>(null);
-
-  console.log(photo);
+  const [faces, setFaces] = React.useState<Face[]>([]);
 
   const takePhoto = async () => {
     if (cameraRef.current) {
@@ -63,19 +62,17 @@ function CameraView() {
 
   // Define your face detection options
   const faceDetectionOptions = useRef<FaceDetectionOptions>({
-    performanceMode: 'fast', // or 'accurate'
-    landmarkMode: 'all', // or 'none'
-    classificationMode: 'all', // or 'none'
+    performanceMode: 'accurate', // or 'fast'
+    landmarkMode: 'none', // or 'none'
+    classificationMode: 'all', // to detect emotions such as smiling
+    
     trackingEnabled: true, // whether to track faces between frames
   }).current;
 
-  // Callback function to handle face detection
+  // Callback function to handle face and emotion detection
   const faceDetectionCallback = (faces: Face[], frame: Frame) => {
-    setFaces(faces); // Update state with detected faces
+    setFaces(faces); // Update state with detected faces and emotions
   };
-
-  const [faces, setFaces] = React.useState<Face[]>([]);
-
 
   return (
     photo ? (
@@ -102,28 +99,44 @@ function CameraView() {
     ) : (
       <View style={StyleSheet.absoluteFill}>
         <Camera
-            style={StyleSheet.absoluteFill}
-            device={device}
-            isActive={true}
-            photo={true}
-            faceDetectionOptions={faceDetectionOptions}
-            faceDetectionCallback={faceDetectionCallback}
+          style={StyleSheet.absoluteFill}
+          device={device}
+          isActive={true}
+          photo={true}
+          ref={cameraRef}
+          faceDetectionOptions={faceDetectionOptions}
+          faceDetectionCallback={faceDetectionCallback}
+        />
+        {faces.map((face, index) => (
+          <View key={index}>
+            <View
+              style={{
+                position: 'absolute',
+                borderColor: 'red',
+                borderWidth: 2,
+                left: face.bounds.x,
+                top: face.bounds.y,
+                width: face.bounds.width,
+                height: face.bounds.height,
+              }}
             />
-            {faces.map((face, index) => (
-          <View
-            key={index}
-            style={{
-              position: 'absolute',
-              borderColor: 'red',
-              borderWidth: 2,
-              left: face.bounds.x,
-              top: face.bounds.y,
-              width: face.bounds.width,
-              height: face.bounds.height,
-            }}
-          />
+            {face.smilingProbability !== undefined && (
+              <Text
+                style={{
+                  position: 'absolute',
+                  top: face.bounds.y - 20,
+                  left: face.bounds.x,
+                  color: 'white',
+                  backgroundColor: 'black',
+                  padding: 5,
+                  borderRadius: 5,
+                }}
+              >
+                {face.smilingProbability > 0.5 ? 'Smiling' : 'Not Smiling'}
+              </Text>
+            )}
+          </View>
         ))}
-
         <TouchableOpacity
           onPress={takePhoto}
           style={{
@@ -147,7 +160,3 @@ function CameraView() {
 export default CameraView;
 
 const styles = StyleSheet.create({});
-function setFaces(faces: Face[]) {
-  throw new Error('Function not implemented.');
-}
-
