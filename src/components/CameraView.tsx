@@ -7,13 +7,18 @@ import {
   Image
 } from 'react-native';
 
-import React from 'react';
+import React, { useRef } from 'react';
 
 import {
-  Camera,
+  Frame,
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
+import {
+  Face,
+  Camera,
+  FaceDetectionOptions
+} from 'react-native-vision-camera-face-detector'
 
 const PermissionsPage = () => {
   const { requestPermission } = useCameraPermission();
@@ -55,7 +60,23 @@ function CameraView() {
 
   if (!hasPermission) return <PermissionsPage />;
   if (device == null) return <NoCameraDeviceError />;
-  
+
+  // Define your face detection options
+  const faceDetectionOptions = useRef<FaceDetectionOptions>({
+    performanceMode: 'fast', // or 'accurate'
+    landmarkMode: 'all', // or 'none'
+    classificationMode: 'all', // or 'none'
+    trackingEnabled: true, // whether to track faces between frames
+  }).current;
+
+  // Callback function to handle face detection
+  const faceDetectionCallback = (faces: Face[], frame: Frame) => {
+    setFaces(faces); // Update state with detected faces
+  };
+
+  const [faces, setFaces] = React.useState<Face[]>([]);
+
+
   return (
     photo ? (
       <>
@@ -81,12 +102,28 @@ function CameraView() {
     ) : (
       <View style={StyleSheet.absoluteFill}>
         <Camera
-          style={StyleSheet.absoluteFill}
-          device={device}
-          isActive={true}
-          photo={true}
-          ref={cameraRef}
-        />
+            style={StyleSheet.absoluteFill}
+            device={device}
+            isActive={true}
+            photo={true}
+            faceDetectionOptions={faceDetectionOptions}
+            faceDetectionCallback={faceDetectionCallback}
+            />
+            {faces.map((face, index) => (
+          <View
+            key={index}
+            style={{
+              position: 'absolute',
+              borderColor: 'red',
+              borderWidth: 2,
+              left: face.bounds.x,
+              top: face.bounds.y,
+              width: face.bounds.width,
+              height: face.bounds.height,
+            }}
+          />
+        ))}
+
         <TouchableOpacity
           onPress={takePhoto}
           style={{
@@ -110,3 +147,7 @@ function CameraView() {
 export default CameraView;
 
 const styles = StyleSheet.create({});
+function setFaces(faces: Face[]) {
+  throw new Error('Function not implemented.');
+}
+
