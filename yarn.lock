@@ -4237,7 +4237,7 @@ react-is@^16.13.1:
 react-is@^17.0.1:
   version "17.0.2"
 
-react-native-reanimated@^3.15.0:
+react-native-reanimated@*, react-native-reanimated@^3.15.0:
   version "3.15.0"
   resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.15.0.tgz"
   integrity sha512-yGxOyYAAu/5CyjonM2SgsM5sviiiK8HiHL9jT1bKfRxMLnNX9cFP8/UXRkbMT7ZXIfOlCvNFR0AqnphpuXIPVA==
@@ -4253,6 +4253,11 @@ react-native-reanimated@^3.15.0:
     "@babel/preset-typescript" "^7.16.7"
     convert-source-map "^2.0.0"
     invariant "^2.2.4"
+
+react-native-vision-camera@^4.5.2:
+  version "4.5.2"
+  resolved "https://registry.npmjs.org/react-native-vision-camera/-/react-native-vision-camera-4.5.2.tgz"
+  integrity sha512-k5iITx10jmAPofVnz8S5/ZHyJYgHw/7MQ58M6S3z7TBlCqRu7D9dz4HSJrQcCpV8rBE3a5xyMqxTZ4Hth/h+2g==
 
 react-native@*, react-native@0.75.2:
   version "0.75.2"
