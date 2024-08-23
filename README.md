@@ -25,15 +25,18 @@ To get this app up and running on your device:
 
 1. **Clone this repo**: 
    ```
-   git clone https://github.com/yourusername/MoodMe-Emotion Detection-App.git
+   git clone https://github.com/Appy-arsne/EmotionApp.git
    ```
    
 2. **Install dependencies**:
    ```
    npm install
    ```
-
-3. **Run the app**:
+3. **Only IOS and MAC**(Optional):
+   ```
+   cd ios && pod install
+   ```
+5. **Run the app**:
    ```
    npx react-native run-android
    ```
@@ -42,7 +45,7 @@ To get this app up and running on your device:
    npx react-native run-ios
    ```
 
-4. **Watch your emotions unfold!** 🥳
+6. **Watch your emotions unfold!** 🥳
 
 ## 🧠 Tech Stack
 
