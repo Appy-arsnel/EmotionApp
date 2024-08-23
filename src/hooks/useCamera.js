@@ -1,0 +1,2 @@
+const { hasPermission, requestPermission } = useCameraPermission()
+
