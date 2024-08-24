@@ -32,6 +32,9 @@ To get this app up and running on your device:
    ```
    npm install
    ```
+   ```
+   yarn install
+   ```
 3. **Only IOS and MAC**(Optional):
    ```
    cd ios && pod install
